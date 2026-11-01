@@ -131,6 +131,11 @@ CLIMATE_REMOVE_REDUNDANT_ENTITIES = True
 # (dashboards, voice assistants) and the climate is the single control of the appliance.
 CLIMATE_KEPT_CONTROLS_AS_CONFIG = True
 
+# Entities with the "configuration" category are hidden by default when they are first added
+# to the entity registry, so they stay out of dashboards and do not trigger automations by
+# mistake. Entities already registered keep their current visibility.
+CONFIG_ENTITIES_HIDDEN_BY_DEFAULT = True
+
 # Climate: HVAC modes the API lists but a given appliance model does not really support
 # (e.g. "HEAT" on a cooling-only air conditioner). Key: appliance model as shown on the device
 # page, value: raw API mode values to hide.

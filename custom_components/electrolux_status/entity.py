@@ -13,7 +13,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN, TRANSLATED_ENTITY_NAMES
+from .const import CONFIG_ENTITIES_HIDDEN_BY_DEFAULT, DOMAIN, TRANSLATED_ENTITY_NAMES
 from .model import ElectroluxDevice
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
@@ -206,6 +206,15 @@ class ElectroluxEntity(CoordinatorEntity):
     def entity_category(self) -> EntityCategory | None:
         """Return entity category."""
         return self._entity_category
+
+    @property
+    def entity_registry_visible_default(self) -> bool:
+        """Return if the entity should be visible when first added to the registry."""
+        # Configuration entities are hidden by default (see CONFIG_ENTITIES_HIDDEN_BY_DEFAULT).
+        # Read when the entity is added, after demote_controls_to_config has set the category.
+        if CONFIG_ENTITIES_HIDDEN_BY_DEFAULT and self.entity_category == EntityCategory.CONFIG:
+            return False
+        return True
 
     @property
     def device_class(self):
