@@ -44,11 +44,11 @@ todo o conteúdo deles está reproduzido nos commits acima, exceto o
 ## GitHub
 
 - **Remote `upstream`:** https://github.com/albaintor/homeassistant_electrolux_status
-- **Fork (público):** https://github.com/lucararqbr/homeassistant_electrolux
+- **Fork (público):** https://github.com/lucararqbr/homeassistant_electrolux_status
   — branch `modificado`: os mesmos commits deste repositório, mas na estrutura
   do original (`custom_components/electrolux_status/`), partindo da tag `v2.3.6`.
 - **Comparativo original × modificado:**
-  https://github.com/albaintor/homeassistant_electrolux_status/compare/v2.3.6...lucararqbr:homeassistant_electrolux:modificado
+  https://github.com/albaintor/homeassistant_electrolux_status/compare/v2.3.6...lucararqbr:homeassistant_electrolux_status:modificado
 - Este repositório local tem os arquivos na raiz (estrutura de instalação);
   o branch `modificado` do fork é gerado a partir dele. Ao mudar algo aqui,
   replicar o commit no branch `modificado` e fazer push.
