@@ -13,6 +13,7 @@ from homeassistant.components.number import NumberDeviceClass
 from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.components.switch import SwitchDeviceClass
 from homeassistant.const import Platform, UnitOfTemperature
+from homeassistant.helpers.entity import EntityCategory
 
 from .binary_sensor import ElectroluxBinarySensor
 from .button import ElectroluxButton
@@ -474,6 +475,11 @@ class Appliance:
         # override the api determined type by the catalog entity_platform
         if catalog_item and isinstance(catalog_item.entity_platform, Platform):
             entity_type = catalog_item.entity_platform
+
+        # Keep only action buttons (ON/OFF) in Controls.
+        # Other adjustable entities are configuration options.
+        if entity_type in (SWITCH, SELECT, NUMBER):
+            entity_category = EntityCategory.CONFIG
 
         _LOGGER.debug(
             "Electrolux get_entity. entity_type: %s entity_name: %s entity_attr: %s entity_source: %s capability: %s device_class: %s unit: %s, catalog: %s",
