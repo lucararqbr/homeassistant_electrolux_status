@@ -37,5 +37,252 @@
         }
       }
     }
+  },
+  "entity": {
+    "binary_sensor": {
+      "alerts": {
+        "name": "Alerts"
+      },
+      "appliance_state": {
+        "name": "Appliance state"
+      },
+      "auto_sense_mode": {
+        "name": "Auto sense mode"
+      },
+      "clean_air_mode": {
+        "name": "Clean air mode"
+      },
+      "comfort_air": {
+        "name": "Comfort air"
+      },
+      "connectivity_state": {
+        "name": "Connectivity state"
+      },
+      "evaporator_defrost_state": {
+        "name": "Evaporator defrost state"
+      },
+      "filter_state": {
+        "name": "Filter state"
+      },
+      "sleep_mode": {
+        "name": "Sleep mode"
+      },
+      "sound_volume": {
+        "name": "Sound volume"
+      },
+      "stop_time": {
+        "name": "Stop time"
+      }
+    },
+    "button": {
+      "alerts": {
+        "name": "Alerts"
+      },
+      "appliance_state": {
+        "name": "Appliance state"
+      },
+      "auto_sense_mode": {
+        "name": "Auto sense mode"
+      },
+      "clean_air_mode": {
+        "name": "Clean air mode"
+      },
+      "comfort_air": {
+        "name": "Comfort air"
+      },
+      "connectivity_state": {
+        "name": "Connectivity state"
+      },
+      "evaporator_defrost_state": {
+        "name": "Evaporator defrost state"
+      },
+      "filter_state": {
+        "name": "Filter state"
+      },
+      "sleep_mode": {
+        "name": "Sleep mode"
+      },
+      "sound_volume": {
+        "name": "Sound volume"
+      },
+      "stop_time": {
+        "name": "Stop time"
+      }
+    },
+    "climate": {
+      "electrolux_ac": {
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "auto": "Auto",
+              "low": "Low",
+              "medium": "Medium",
+              "high": "High",
+              "turbo": "Turbo"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "oscillate_wide": "Oscillate: Wide",
+              "oscillate_up": "Oscillate: Up",
+              "oscillate_middle": "Oscillate: Middle",
+              "oscillate_down": "Oscillate: Down",
+              "fixed_up": "Fixed: Pointing up",
+              "fixed_up_middle": "Fixed: Between up and middle",
+              "fixed_above_middle": "Fixed: Above middle",
+              "fixed_below_middle": "Fixed: Below middle",
+              "fixed_down_middle": "Fixed: Between down and middle",
+              "fixed_down": "Fixed: Pointing down"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "on": "On",
+              "off": "Off"
+            }
+          }
+        }
+      }
+    },
+    "number": {
+      "alerts": {
+        "name": "Alerts"
+      },
+      "appliance_state": {
+        "name": "Appliance state"
+      },
+      "auto_sense_mode": {
+        "name": "Auto sense mode"
+      },
+      "clean_air_mode": {
+        "name": "Clean air mode"
+      },
+      "comfort_air": {
+        "name": "Comfort air"
+      },
+      "connectivity_state": {
+        "name": "Connectivity state"
+      },
+      "evaporator_defrost_state": {
+        "name": "Evaporator defrost state"
+      },
+      "filter_state": {
+        "name": "Filter state"
+      },
+      "sleep_mode": {
+        "name": "Sleep mode"
+      },
+      "sound_volume": {
+        "name": "Sound volume"
+      },
+      "stop_time": {
+        "name": "Stop time"
+      }
+    },
+    "select": {
+      "alerts": {
+        "name": "Alerts"
+      },
+      "appliance_state": {
+        "name": "Appliance state"
+      },
+      "auto_sense_mode": {
+        "name": "Auto sense mode"
+      },
+      "clean_air_mode": {
+        "name": "Clean air mode"
+      },
+      "comfort_air": {
+        "name": "Comfort air"
+      },
+      "connectivity_state": {
+        "name": "Connectivity state"
+      },
+      "evaporator_defrost_state": {
+        "name": "Evaporator defrost state"
+      },
+      "filter_state": {
+        "name": "Filter state"
+      },
+      "sleep_mode": {
+        "name": "Sleep mode"
+      },
+      "sound_volume": {
+        "name": "Sound volume"
+      },
+      "stop_time": {
+        "name": "Stop time"
+      }
+    },
+    "sensor": {
+      "alerts": {
+        "name": "Alerts"
+      },
+      "appliance_state": {
+        "name": "Appliance state"
+      },
+      "auto_sense_mode": {
+        "name": "Auto sense mode"
+      },
+      "clean_air_mode": {
+        "name": "Clean air mode"
+      },
+      "comfort_air": {
+        "name": "Comfort air"
+      },
+      "connectivity_state": {
+        "name": "Connectivity state"
+      },
+      "evaporator_defrost_state": {
+        "name": "Evaporator defrost state"
+      },
+      "filter_state": {
+        "name": "Filter state"
+      },
+      "sleep_mode": {
+        "name": "Sleep mode"
+      },
+      "sound_volume": {
+        "name": "Sound volume"
+      },
+      "stop_time": {
+        "name": "Stop time"
+      }
+    },
+    "switch": {
+      "alerts": {
+        "name": "Alerts"
+      },
+      "appliance_state": {
+        "name": "Appliance state"
+      },
+      "auto_sense_mode": {
+        "name": "Auto sense mode"
+      },
+      "clean_air_mode": {
+        "name": "Clean air mode"
+      },
+      "comfort_air": {
+        "name": "Comfort air"
+      },
+      "connectivity_state": {
+        "name": "Connectivity state"
+      },
+      "evaporator_defrost_state": {
+        "name": "Evaporator defrost state"
+      },
+      "filter_state": {
+        "name": "Filter state"
+      },
+      "sleep_mode": {
+        "name": "Sleep mode"
+      },
+      "sound_volume": {
+        "name": "Sound volume"
+      },
+      "stop_time": {
+        "name": "Stop time"
+      }
+    }
   }
 }

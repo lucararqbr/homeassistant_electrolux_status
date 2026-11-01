@@ -76,6 +76,10 @@ class ElectroluxDevice:
 
     entity_value_named: bool = False
 
+    # Slider step of a number entity, in the unit shown in Home Assistant. Overrides the step
+    # reported by the API (e.g. 60 minutes for a timer that can only be set hour by hour).
+    display_step: float | None = None
+
 
 class ElectroluxTokenStore(TypedDict):
     """Serialized exposed entities storage storage collection."""

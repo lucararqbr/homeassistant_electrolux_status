@@ -1,0 +1,308 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "O dispositivo já está configurado",
+            "already_configured_account": "Conta já está configurada",
+            "reconfigure_successful": "A reconfiguração foi bem sucedida",
+            "single_instance_allowed": "Já configurado. Só é possivel uma configuração."
+        },
+        "error": {
+            "invalid_auth": "Autenticação inválida"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "language": "Idioma",
+                    "notifications": "Ativar notificações para avisos de nível de alerta",
+                    "notifications_diagnostic": "Aumentar notificações para avisos de nível de diagnóstico",
+                    "notifications_warning": "Aumentar notificações para avisos de nível de alerta",
+                    "password": "Senha",
+                    "username": "Nome de Usuário"
+                },
+                "description": "Se precisar de ajuda com a configuração, visite:  homepage",
+                "title": "Electrolux"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "user": {
+                "data": {
+                    "language": "Idioma",
+                    "notifications": "Ativar notificações para avisos de nível de alerta",
+                    "notifications_diagnostic": "Aumentar notificações para avisos de nível de diagnóstico",
+                    "notifications_warning": "Aumentar notificações para avisos de nível de alerta",
+                    "password": "Senha",
+                    "renew_interval": "Intervalo de atualização do WebSocket (segundos)"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "alerts": {
+                "name": "Alertas"
+            },
+            "appliance_state": {
+                "name": "Estado do aparelho"
+            },
+            "auto_sense_mode": {
+                "name": "AutoSense"
+            },
+            "clean_air_mode": {
+                "name": "Secagem automática"
+            },
+            "comfort_air": {
+                "name": "Ar indireto"
+            },
+            "connectivity_state": {
+                "name": "Estado da conexão"
+            },
+            "evaporator_defrost_state": {
+                "name": "Estado do degelo do evaporador"
+            },
+            "filter_state": {
+                "name": "Estado do filtro"
+            },
+            "sleep_mode": {
+                "name": "Dormir bem"
+            },
+            "sound_volume": {
+                "name": "Som"
+            },
+            "stop_time": {
+                "name": "Timer"
+            }
+        },
+        "button": {
+            "alerts": {
+                "name": "Alertas"
+            },
+            "appliance_state": {
+                "name": "Estado do aparelho"
+            },
+            "auto_sense_mode": {
+                "name": "AutoSense"
+            },
+            "clean_air_mode": {
+                "name": "Secagem automática"
+            },
+            "comfort_air": {
+                "name": "Ar indireto"
+            },
+            "connectivity_state": {
+                "name": "Estado da conexão"
+            },
+            "evaporator_defrost_state": {
+                "name": "Estado do degelo do evaporador"
+            },
+            "filter_state": {
+                "name": "Estado do filtro"
+            },
+            "sleep_mode": {
+                "name": "Dormir bem"
+            },
+            "sound_volume": {
+                "name": "Som"
+            },
+            "stop_time": {
+                "name": "Timer"
+            }
+        },
+        "climate": {
+            "electrolux_ac": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "Automático",
+                            "low": "Baixa",
+                            "medium": "Média",
+                            "high": "Alta",
+                            "turbo": "Turbo"
+                        }
+                    },
+                    "preset_mode": {
+                        "state": {
+                            "oscillate_wide": "Oscilar: Amplo",
+                            "oscillate_up": "Oscilar: Em cima",
+                            "oscillate_middle": "Oscilar: No meio",
+                            "oscillate_down": "Oscilar: Em baixo",
+                            "fixed_up": "Fixo: Direcionado para cima",
+                            "fixed_up_middle": "Fixo: Entre cima e meio",
+                            "fixed_above_middle": "Fixo: Acima do meio",
+                            "fixed_below_middle": "Fixo: Abaixo do meio",
+                            "fixed_down_middle": "Fixo: Entre baixo e meio",
+                            "fixed_down": "Fixo: Direcionado para baixo"
+                        }
+                    },
+                    "swing_mode": {
+                        "state": {
+                            "on": "Ligada",
+                            "off": "Desligada"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "alerts": {
+                "name": "Alertas"
+            },
+            "appliance_state": {
+                "name": "Estado do aparelho"
+            },
+            "auto_sense_mode": {
+                "name": "AutoSense"
+            },
+            "clean_air_mode": {
+                "name": "Secagem automática"
+            },
+            "comfort_air": {
+                "name": "Ar indireto"
+            },
+            "connectivity_state": {
+                "name": "Estado da conexão"
+            },
+            "evaporator_defrost_state": {
+                "name": "Estado do degelo do evaporador"
+            },
+            "filter_state": {
+                "name": "Estado do filtro"
+            },
+            "sleep_mode": {
+                "name": "Dormir bem"
+            },
+            "sound_volume": {
+                "name": "Som"
+            },
+            "stop_time": {
+                "name": "Timer"
+            }
+        },
+        "select": {
+            "alerts": {
+                "name": "Alertas"
+            },
+            "appliance_state": {
+                "name": "Estado do aparelho"
+            },
+            "auto_sense_mode": {
+                "name": "AutoSense"
+            },
+            "clean_air_mode": {
+                "name": "Secagem automática"
+            },
+            "comfort_air": {
+                "name": "Ar indireto"
+            },
+            "connectivity_state": {
+                "name": "Estado da conexão"
+            },
+            "evaporator_defrost_state": {
+                "name": "Estado do degelo do evaporador"
+            },
+            "filter_state": {
+                "name": "Estado do filtro"
+            },
+            "sleep_mode": {
+                "name": "Dormir bem"
+            },
+            "sound_volume": {
+                "name": "Som",
+                "state": {
+                    "0": "Desligado",
+                    "1": "Ligado"
+                }
+            },
+            "stop_time": {
+                "name": "Timer"
+            }
+        },
+        "sensor": {
+            "alerts": {
+                "name": "Alertas"
+            },
+            "appliance_state": {
+                "name": "Estado do aparelho",
+                "state": {
+                    "Running": "Em funcionamento",
+                    "Off": "Desligado",
+                    "Idle": "Inativo"
+                }
+            },
+            "auto_sense_mode": {
+                "name": "AutoSense"
+            },
+            "clean_air_mode": {
+                "name": "Secagem automática",
+                "state": {
+                    "On": "Ligada",
+                    "Off": "Desligada"
+                }
+            },
+            "comfort_air": {
+                "name": "Ar indireto"
+            },
+            "connectivity_state": {
+                "name": "Estado da conexão",
+                "state": {
+                    "Connected": "Conectado",
+                    "Disconnected": "Desconectado"
+                }
+            },
+            "evaporator_defrost_state": {
+                "name": "Estado do degelo do evaporador"
+            },
+            "filter_state": {
+                "name": "Estado do filtro",
+                "state": {
+                    "Good": "Bom"
+                }
+            },
+            "sleep_mode": {
+                "name": "Dormir bem"
+            },
+            "sound_volume": {
+                "name": "Som"
+            },
+            "stop_time": {
+                "name": "Timer"
+            }
+        },
+        "switch": {
+            "alerts": {
+                "name": "Alertas"
+            },
+            "appliance_state": {
+                "name": "Estado do aparelho"
+            },
+            "auto_sense_mode": {
+                "name": "AutoSense"
+            },
+            "clean_air_mode": {
+                "name": "Secagem automática"
+            },
+            "comfort_air": {
+                "name": "Ar indireto"
+            },
+            "connectivity_state": {
+                "name": "Estado da conexão"
+            },
+            "evaporator_defrost_state": {
+                "name": "Estado do degelo do evaporador"
+            },
+            "filter_state": {
+                "name": "Estado do filtro"
+            },
+            "sleep_mode": {
+                "name": "Dormir bem"
+            },
+            "sound_volume": {
+                "name": "Som"
+            },
+            "stop_time": {
+                "name": "Timer"
+            }
+        }
+    }
+}

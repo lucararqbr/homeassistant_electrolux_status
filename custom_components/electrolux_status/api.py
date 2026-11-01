@@ -13,16 +13,18 @@ from homeassistant.components.number import NumberDeviceClass
 from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.components.switch import SwitchDeviceClass
 from homeassistant.const import Platform, UnitOfTemperature
-from homeassistant.helpers.entity import EntityCategory
 
 from .binary_sensor import ElectroluxBinarySensor
 from .button import ElectroluxButton
 from .catalog_core import CATALOG_BASE, CATALOG_MODEL
+from .climate import build_climate_entities, demote_controls_to_config
 from .const import (
     ATTRIBUTES_BLACKLIST,
     ATTRIBUTES_WHITELIST,
     BINARY_SENSOR,
     BUTTON,
+    CLIMATE_KEPT_CONTROLS_AS_CONFIG,
+    CLIMATE_REMOVE_REDUNDANT_ENTITIES,
     NUMBER,
     PLATFORMS,
     RENAME_RULES,
@@ -476,11 +478,6 @@ class Appliance:
         if catalog_item and isinstance(catalog_item.entity_platform, Platform):
             entity_type = catalog_item.entity_platform
 
-        # Keep only action buttons (ON/OFF) in Controls.
-        # Other adjustable entities are configuration options.
-        if entity_type in (SWITCH, SELECT, NUMBER):
-            entity_category = EntityCategory.CONFIG
-
         _LOGGER.debug(
             "Electrolux get_entity. entity_type: %s entity_name: %s entity_attr: %s entity_source: %s capability: %s device_class: %s unit: %s, catalog: %s",
             entity_type,
@@ -631,6 +628,17 @@ class Appliance:
                     entities.extend(entity)
                 else:
                     _LOGGER.debug("Could not create entity for capability %s", capability)
+
+        # Air conditioners also get a native climate entity built from their attributes.
+        # The entities that only duplicate it are not created.
+        climate_entities = build_climate_entities(self)
+        if climate_entities and CLIMATE_REMOVE_REDUNDANT_ENTITIES:
+            entities = [
+                entity for entity in entities if not any(climate.covers(entity) for climate in climate_entities)
+            ]
+        if climate_entities and CLIMATE_KEPT_CONTROLS_AS_CONFIG:
+            demote_controls_to_config(entities)
+        entities.extend(climate_entities)
 
         # Setup each found entity
         self.entities = entities

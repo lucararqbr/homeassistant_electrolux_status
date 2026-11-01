@@ -84,6 +84,9 @@ class ElectroluxNumber(ElectroluxEntity, NumberEntity):
     @property
     def native_step(self) -> float:
         """Return the max value."""
+        if self.catalog_entry and self.catalog_entry.display_step:
+            # Step forced by the catalog, in the displayed unit (e.g. 60 min for hour-only timers)
+            return self.catalog_entry.display_step
         if self.unit == UnitOfTime.SECONDS:
             return time_seconds_to_minutes(self.capability.get("step", 1))
         return self.capability.get("step", 1)

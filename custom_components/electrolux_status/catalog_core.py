@@ -673,6 +673,22 @@ CATALOG_BASE: dict[str, ElectroluxDevice] = {
         entity_category=None,
         entity_icon="mdi:clock-start",
     ),
+    # Sleep / stop timer (air conditioners): the API reports the remaining time in
+    # seconds (shown in minutes), but the appliance and the app can only be programmed hour by hour.
+    "stopTime": ElectroluxDevice(
+        capability_info={
+            "access": "readwrite",
+            "type": "number",
+            "max": 43200,
+            "min": 0,
+            "step": 3600,
+        },
+        device_class=None,
+        unit=UnitOfTime.SECONDS,
+        entity_category=None,
+        entity_icon="mdi:timer-outline",
+        display_step=60,
+    ),
     "targetMicrowavePower": ElectroluxDevice(
         capability_info={"access": "read", "type": "number"},
         device_class=SensorDeviceClass.ENERGY,

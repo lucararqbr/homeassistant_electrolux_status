@@ -13,7 +13,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN
+from .const import DOMAIN, TRANSLATED_ENTITY_NAMES
 from .model import ElectroluxDevice
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
@@ -68,6 +68,10 @@ class ElectroluxEntity(CoordinatorEntity):
         self.coordinator = coordinator
         self._cached_value = None
         self._name = name
+        key = re.sub(r"[^a-z0-9]+", "_", str(name).lower()).strip("_")
+        if key in TRANSLATED_ENTITY_NAMES and not (catalog_entry and catalog_entry.friendly_name):
+            # Name comes from the translation files (see TRANSLATED_ENTITY_NAMES)
+            self._attr_translation_key = key
         self._icon = icon
         self._device_class = device_class
         self._entity_category = entity_category
@@ -164,6 +168,14 @@ class ElectroluxEntity(CoordinatorEntity):
         """Return the name of the sensor."""
         if self.catalog_entry and self.catalog_entry.friendly_name:
             return self.catalog_entry.friendly_name.capitalize()
+        if getattr(self, "_attr_translation_key", None):
+            # Translated name; falls back to the generated name if no translation is loaded
+            try:
+                translated = super().name
+            except AttributeError:  # not yet added to a platform
+                translated = None
+            if isinstance(translated, str) and translated:
+                return translated
         return self._name
 
     @property

@@ -15,11 +15,12 @@ LOOKUP_DIRECTORY_PATH = f"{COMPONENTS_DIRECTORY}/{DOMAIN}/{LOOKUP_DIRECTORY}/"
 # Platforms
 BINARY_SENSOR = Platform.BINARY_SENSOR
 BUTTON = Platform.BUTTON
+CLIMATE = Platform.CLIMATE
 NUMBER = Platform.NUMBER
 SELECT = Platform.SELECT
 SENSOR = Platform.SENSOR
 SWITCH = Platform.SWITCH
-PLATFORMS = [BINARY_SENSOR, BUTTON, NUMBER, SELECT, SENSOR, SWITCH]
+PLATFORMS = [BINARY_SENSOR, BUTTON, CLIMATE, NUMBER, SELECT, SENSOR, SWITCH]
 
 # Configuration and options
 CONF_LANGUAGE = "language"
@@ -100,6 +101,42 @@ ATTRIBUTES_WHITELIST: list[str] = [".*waterUsage",
 # Rules to simplify the naming of entities
 RENAME_RULES: list[str] = [r"^userSelections\/[^_]+_", r"^userSelections\/",
                            r"^fCMiscellaneousState\/[^_]+_", r"^fCMiscellaneousState\/"]
+
+# Entities whose name is translated through the translation files
+# (entity.<platform>.<key>.name). The key is the generated English name, lowercased with
+# underscores ("Auto sense mode" -> "auto_sense_mode"). Other entities keep the generated name.
+TRANSLATED_ENTITY_NAMES: frozenset[str] = frozenset(
+    {
+        "alerts",
+        "appliance_state",
+        "auto_sense_mode",
+        "clean_air_mode",
+        "comfort_air",
+        "connectivity_state",
+        "evaporator_defrost_state",
+        "filter_state",
+        "sleep_mode",
+        "sound_volume",
+        "stop_time",
+    }
+)
+
+# Climate: when an appliance gets a climate entity, do not create the entities that only
+# duplicate it (ON/OFF buttons, mode, fan speed, target temperature, flap oscillation and
+# flap position). Entities that the climate cannot fully replace are kept.
+CLIMATE_REMOVE_REDUNDANT_ENTITIES = True
+
+# Climate: controls (switch, select, number, button) that remain on an appliance with a climate
+# entity are given the "configuration" category, so they stay out of the default controls
+# (dashboards, voice assistants) and the climate is the single control of the appliance.
+CLIMATE_KEPT_CONTROLS_AS_CONFIG = True
+
+# Climate: HVAC modes the API lists but a given appliance model does not really support
+# (e.g. "HEAT" on a cooling-only air conditioner). Key: appliance model as shown on the device
+# page, value: raw API mode values to hide.
+CLIMATE_HIDDEN_MODES: dict[str, list[str]] = {
+    "YI12F": ["HEAT"],
+}
 
 # List of entity names that need to be updated to 0 manually when they are close to 0
 TIME_ENTITIES_TO_UPDATE = ["timeToEnd"]
