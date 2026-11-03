@@ -2,6 +2,7 @@
 
 import re
 
+from homeassistant.components.binary_sensor import BinarySensorDeviceClass
 from homeassistant.const import Platform
 
 # Base component constants
@@ -135,6 +136,14 @@ CLIMATE_KEPT_CONTROLS_AS_CONFIG = True
 # to the entity registry, so they stay out of dashboards and do not trigger automations by
 # mistake. Entities already registered keep their current visibility.
 CONFIG_ENTITIES_HIDDEN_BY_DEFAULT = True
+
+# Climate: state attributes of air conditioners shown as on/off binary sensors instead of text
+# sensors. Off only when the API reports "OFF" (for applianceState, "IDLE" counts as on).
+# Value: (device class, icon).
+CLIMATE_BINARY_SENSORS: dict[str, tuple[BinarySensorDeviceClass | None, str]] = {
+    "applianceState": (BinarySensorDeviceClass.POWER, "mdi:power"),
+    "cleanAirMode": (None, "mdi:water-off"),
+}
 
 # Climate: HVAC modes the API lists but a given appliance model does not really support
 # (e.g. "HEAT" on a cooling-only air conditioner). Key: appliance model as shown on the device

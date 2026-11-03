@@ -51,7 +51,10 @@ class ElectroluxBinarySensor(ElectroluxEntity, BinarySensorEntity):
     def is_on(self) -> bool:
         """Return true if the binary_sensor is on."""
         value = self.extract_value()
-        if isinstance(value, str):
+        if isinstance(value, str) and self.catalog_entry and self.catalog_entry.state_off_values is not None:
+            # On unless the value is one of the "off" values (see state_off_values)
+            value = value.strip().upper() not in {off.upper() for off in self.catalog_entry.state_off_values}
+        elif isinstance(value, str):
             converted = string_to_boolean(value, False)
             value = converted if isinstance(converted, bool) else False
         if value is None:

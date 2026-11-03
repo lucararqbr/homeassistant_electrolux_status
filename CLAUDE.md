@@ -26,6 +26,7 @@ Apesar do nome `_climate_` no zip, a versão original **não** tem plataforma
 | `minhas modificações` | Conteúdo de `electrolux_status_climate_2.3.6_modificado_r2.zip` (31/10/2026) |
 | `ocultar entidades de Configuração por padrão` | Item 9 abaixo (01/11/2026) |
 | `docs: CLAUDE.md` | Este arquivo |
+| `estado do aparelho e secagem automática como binary sensor` | Item 10 abaixo (03/11/2026) |
 
 Para ver tudo que mudou em relação ao original: `git diff v2.3.6 main` não
 funciona direto (a tag tem outra estrutura de pastas); use
@@ -201,9 +202,35 @@ mas continuavam visíveis.
 - Entidades ocultas continuam funcionando e podem ser reexibidas em
   Configurações → Entidades.
 
+### 10. Estado do aparelho e Secagem automática como binary sensor
+**Arquivos:** `const.py` (`CLIMATE_BINARY_SENSORS`), `api.py` (`get_entity`),
+`model.py` (`state_off_values`), `binary_sensor.py`, `strings.json`,
+`translations/en.json`, `pt_br.json`, `pt-BR.json`, `pt.json`
+
+**Por quê:** no ar-condicionado esses dois estados eram sensores de texto
+(*Em funcionamento / Inativo / Desligado* e *Ligada / Desligada*); como
+liga/desliga ficam mais simples para cartões e automações.
+
+- Só vale para aparelhos com climate; nos demais (lavadora etc.)
+  `applianceState` continua sensor de texto, como no original.
+- `applianceState` → binary sensor classe `power` (*Ligado/Desligado*),
+  ícone `mdi:power`, **habilitado por padrão** (no catálogo original vem
+  desabilitado).
+- `cleanAirMode` → binary sensor sem classe (*Ligada/Desligada*), ícone
+  `mdi:water-off`.
+- Desligado **só** quando a API informa `OFF`; qualquer outro valor (`RUNNING`,
+  `IDLE`, `ON`...) conta como ligado. Novo campo `state_off_values` em
+  `ElectroluxDevice` para isso.
+- A entrada do catálogo é copiada (`copy.replace`) antes de ser alterada, para
+  não mudar a definição usada por outros aparelhos.
+- **Ao instalar:** as entidades mudam de domínio (`sensor.*` →
+  `binary_sensor.*`). As antigas ficam como "não fornecidas" e podem ser
+  excluídas; automações/cartões que usavam `sensor.*` precisam ser ajustados
+  (estados agora `on`/`off`).
+
 ## Arquivos não alterados
 
-`__init__.py`, `binary_sensor.py`, `button.py`, `catalog_purifier.py`,
+`__init__.py`, `button.py`, `catalog_purifier.py`,
 `catalog_refrigerator.py`, `config_flow.py`, `coordinator.py`,
 `diagnostics.py`, `manifest.json` (continua 2.3.6), `select.py`, `sensor.py`,
 `switch.py`, `util.py`, `appliance_definitions/`, demais traduções.

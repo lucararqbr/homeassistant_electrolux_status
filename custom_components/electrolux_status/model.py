@@ -80,6 +80,10 @@ class ElectroluxDevice:
     # reported by the API (e.g. 60 minutes for a timer that can only be set hour by hour).
     display_step: float | None = None
 
+    # Binary sensor built from a text state: on unless the value is one of these (case ignored),
+    # e.g. ["OFF"] makes "RUNNING" and "IDLE" both on.
+    state_off_values: list[str] | None = None
+
 
 class ElectroluxTokenStore(TypedDict):
     """Serialized exposed entities storage storage collection."""

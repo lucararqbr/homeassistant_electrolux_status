@@ -44,13 +44,21 @@
                 "name": "Alerts"
             },
             "appliance_state": {
-                "name": "Appliance state"
+                "name": "Appliance state",
+                "state": {
+                    "on": "On",
+                    "off": "Off"
+                }
             },
             "auto_sense_mode": {
                 "name": "Auto sense mode"
             },
             "clean_air_mode": {
-                "name": "Clean air mode"
+                "name": "Clean air mode",
+                "state": {
+                    "on": "On",
+                    "off": "Off"
+                }
             },
             "comfort_air": {
                 "name": "Comfort air"

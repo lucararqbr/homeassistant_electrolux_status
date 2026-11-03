@@ -44,13 +44,21 @@
                 "name": "Alertas"
             },
             "appliance_state": {
-                "name": "Estado do aparelho"
+                "name": "Estado do aparelho",
+                "state": {
+                    "on": "Ligado",
+                    "off": "Desligado"
+                }
             },
             "auto_sense_mode": {
                 "name": "AutoSense"
             },
             "clean_air_mode": {
-                "name": "Secagem automática"
+                "name": "Secagem automática",
+                "state": {
+                    "on": "Ligada",
+                    "off": "Desligada"
+                }
             },
             "comfort_air": {
                 "name": "Ar indireto"

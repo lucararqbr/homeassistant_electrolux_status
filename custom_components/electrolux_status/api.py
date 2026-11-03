@@ -17,12 +17,13 @@ from homeassistant.const import Platform, UnitOfTemperature
 from .binary_sensor import ElectroluxBinarySensor
 from .button import ElectroluxButton
 from .catalog_core import CATALOG_BASE, CATALOG_MODEL
-from .climate import build_climate_entities, demote_controls_to_config
+from .climate import appliance_supports_climate, build_climate_entities, demote_controls_to_config
 from .const import (
     ATTRIBUTES_BLACKLIST,
     ATTRIBUTES_WHITELIST,
     BINARY_SENSOR,
     BUTTON,
+    CLIMATE_BINARY_SENSORS,
     CLIMATE_KEPT_CONTROLS_AS_CONFIG,
     CLIMATE_REMOVE_REDUNDANT_ENTITIES,
     NUMBER,
@@ -477,6 +478,21 @@ class Appliance:
         # override the api determined type by the catalog entity_platform
         if catalog_item and isinstance(catalog_item.entity_platform, Platform):
             entity_type = catalog_item.entity_platform
+
+        # Air conditioners: some state attributes become on/off binary sensors (see CLIMATE_BINARY_SENSORS).
+        # The catalog entry is copied so other appliance types keep the original definition.
+        if capability in CLIMATE_BINARY_SENSORS and appliance_supports_climate(self):
+            device_class, entity_icon = CLIMATE_BINARY_SENSORS[capability]
+            catalog_item = copy.replace(
+                catalog_item or ElectroluxDevice(capability_info=capability_info or {}),
+                device_class=device_class,
+                entity_icon=entity_icon,
+                entity_platform=BINARY_SENSOR,
+                entity_registry_enabled_default=True,
+                state_off_values=["OFF"],
+            )
+            entity_type = BINARY_SENSOR
+            unit = None
 
         _LOGGER.debug(
             "Electrolux get_entity. entity_type: %s entity_name: %s entity_attr: %s entity_source: %s capability: %s device_class: %s unit: %s, catalog: %s",
