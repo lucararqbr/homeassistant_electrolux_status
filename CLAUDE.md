@@ -318,19 +318,21 @@ real, sem precisar do servidor nem da nuvem Electrolux:
   `pyelectroluxocp` 0.1.3).
 
 Python 3.14 instalado no Windows (04/11/2026, via `winget install
-Python.Python.3.14 --scope user`). Ambiente fora do OneDrive (o HA tem
-centenas de MB), criar uma vez:
+Python.Python.3.14 --scope user`). Ambiente em
+`C:\Users\conta\.venvs\electrolux_status` — fora do OneDrive (o HA tem
+centenas de MB) e fora da AppData (o app Claude redireciona o que ele cria lá
+para o armazenamento do próprio app). Criar uma vez:
 
 ```bash
-py -3.14 -m venv "$LOCALAPPDATA/electrolux_status_venv"
-"$LOCALAPPDATA/electrolux_status_venv/Scripts/python.exe" -m pip install -r tests/requirements.txt
+py -3.14 -m venv "$HOME/.venvs/electrolux_status"
+"$HOME/.venvs/electrolux_status/Scripts/python.exe" -m pip install -r tests/requirements.txt
 ```
 
 Rodar, a partir desta pasta (o `-P` é obrigatório: o `select.py` da integração
 esconderia o módulo `select` do Python):
 
 ```bash
-"$LOCALAPPDATA/electrolux_status_venv/Scripts/python.exe" -P -m pytest -p no:cacheprovider tests
+"$HOME/.venvs/electrolux_status/Scripts/python.exe" -P -m pytest -p no:cacheprovider tests
 ```
 
 Rodar os testes antes de cada cópia para o HA. Eles **não** cobrem o
