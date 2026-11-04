@@ -5,6 +5,7 @@ import base64
 from datetime import UTC, timedelta
 import json
 import logging
+import time
 from typing import Any
 
 import aiofiles
@@ -20,7 +21,13 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from homeassistant.util import dt as dt_util
 
 from .api import Appliance, Appliances, ElectroluxLibraryEntity
-from .const import DOMAIN, LOOKUP_DIRECTORY_PATH, TIME_ENTITIES_TO_UPDATE
+from .const import (
+    API_CHECK_IGNORED_KEYS,
+    API_CHECK_INTERVAL,
+    DOMAIN,
+    LOOKUP_DIRECTORY_PATH,
+    TIME_ENTITIES_TO_UPDATE,
+)
 from .model import ElectroluxTokenStore
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
@@ -49,6 +56,9 @@ class ElectroluxCoordinator(DataUpdateCoordinator):
         self.renew_interval = renew_interval
         self._token_expiry = renew_interval
         self._websocket = None
+        # Time of the last data received through the websocket (see async_check_api)
+        self._last_push = time.monotonic()
+        self._check_lock = asyncio.Lock()
         self._accountid = username
         self._token: UserToken | None = None
         self._token_store: ElectroluxTokenStore | None = None
@@ -235,6 +245,7 @@ class ElectroluxCoordinator(DataUpdateCoordinator):
     def incoming_data(self, data: dict[str, dict[str, Any]]):
         """Process incoming data."""
         _LOGGER.debug("Electrolux appliance state updated %s", json.dumps(data))
+        self._last_push = time.monotonic()
         # Update reported data
         appliances: Appliances = self.data.get("appliances", None)
         for appliance_id, appliance_data in data.items():
@@ -259,7 +270,100 @@ class ElectroluxCoordinator(DataUpdateCoordinator):
         _LOGGER.debug("Electrolux listen_websocket for appliances %s", ",".join(ids))
         if ids is None or len(ids) == 0:
             return
+        self._last_push = time.monotonic()
         self._websocket = asyncio.create_task(self.api.watch_for_appliance_state_updates(ids, self.incoming_data))
+
+    async def reconnect_websocket(self) -> None:
+        """Close the websocket and open a new one. Entities are kept (no integration reload)."""
+        appliances: Appliances | None = (self.data or {}).get("appliances", None)
+        ids = appliances.get_appliance_ids() if appliances else []
+        if not ids:
+            return
+        _LOGGER.debug("Electrolux reconnect_websocket for appliances %s", ",".join(ids))
+        try:
+            await self.api.disconnect_websocket()
+        except Exception as ex:  # noqa: BLE001
+            _LOGGER.error("Electrolux reconnect_websocket could not close websocket %s", ex)
+        # Stop the previous connection loop, otherwise two loops could run side by side
+        if self._websocket is not None:
+            self._websocket.cancel()
+            await asyncio.wait([self._websocket], timeout=10)
+        self._last_push = time.monotonic()
+        # The state handlers registered by watch_for_appliance_state_updates are kept by the
+        # websocket client, so only the connection is opened again
+        self._websocket = asyncio.create_task(self.api.connect_websocket(ids), name="Electrolux websocket")
+
+    async def _fetch_appliances_list(self) -> list[dict[str, Any]] | None:
+        """Fetch the appliance list (with reported states), logging in again if the token is rejected."""
+        try:
+            return await self.api.get_appliances_list()
+        except ClientResponseError as ex:
+            if ex.status not in (401, 403):
+                raise
+            _LOGGER.warning("Electrolux API rejected the session (HTTP %s), logging in again", ex.status)
+            if self.api._user_token is not None:  # noqa: SLF001
+                # Force the library to renew the token (same trick as token_renewal_task)
+                self.api._user_token.expiresAt = (dt_util.utcnow() - timedelta(minutes=10)).replace(  # noqa: SLF001
+                    tzinfo=None
+                )
+            await self.async_login()
+            return await self.api.get_appliances_list()
+
+    async def async_check_api(self, _now: Any = None, force_reconnect: bool = False) -> None:
+        """Check the cloud API and reconnect the websocket when it stopped delivering updates.
+
+        The state of every appliance is fetched in one call. Differences with the state shown in
+        Home Assistant are applied right away; when there are differences and the websocket has
+        been silent for API_CHECK_INTERVAL, the websocket is reconnected.
+        """
+        if self._check_lock.locked():
+            return
+        async with self._check_lock:
+            appliances: Appliances | None = (self.data or {}).get("appliances", None)
+            if appliances is None:
+                return
+            try:
+                appliances_list = await self._fetch_appliances_list()
+            except Exception as ex:  # noqa: BLE001
+                _LOGGER.warning("Electrolux API check failed: %s", ex)
+                if force_reconnect:
+                    await self.reconnect_websocket()
+                return
+
+            outdated: dict[str, list[str]] = {}
+            for appliance_json in appliances_list or []:
+                appliance = appliances.get_appliance(appliance_json.get("applianceId"))
+                reported = (appliance_json.get("properties") or {}).get("reported")
+                if appliance is None or not isinstance(reported, dict):
+                    continue
+                current = appliance.reported_state
+                changed = [
+                    key
+                    for key, value in reported.items()
+                    if key not in API_CHECK_IGNORED_KEYS
+                    and not isinstance(value, (dict, list))
+                    and current.get(key) != value
+                ]
+                if changed:
+                    outdated[appliance.pnc_id] = changed
+                    appliance.update_reported_data(reported)
+            if outdated:
+                self.async_set_updated_data(self.data)
+
+            silent = time.monotonic() - self._last_push >= API_CHECK_INTERVAL
+            if force_reconnect:
+                _LOGGER.info("Electrolux API reconnection requested")
+                await self.reconnect_websocket()
+            elif outdated and silent:
+                _LOGGER.warning(
+                    "Electrolux websocket stopped sending updates (outdated values: %s), reconnecting",
+                    outdated,
+                )
+                await self.reconnect_websocket()
+            elif outdated:
+                _LOGGER.debug("Electrolux API check applied outdated values %s", outdated)
+            else:
+                _LOGGER.debug("Electrolux API check: state up to date")
 
     async def launch_websocket_renewal_task(self):
         """Start the renewal of websocket."""

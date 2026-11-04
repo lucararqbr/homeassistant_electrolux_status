@@ -12,10 +12,10 @@ from homeassistant.components.button import ButtonDeviceClass
 from homeassistant.components.number import NumberDeviceClass
 from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.components.switch import SwitchDeviceClass
-from homeassistant.const import Platform, UnitOfTemperature
+from homeassistant.const import EntityCategory, Platform, UnitOfTemperature
 
 from .binary_sensor import ElectroluxBinarySensor
-from .button import ElectroluxButton
+from .button import ElectroluxButton, ElectroluxReconnectButton
 from .catalog_core import CATALOG_BASE, CATALOG_MODEL
 from .climate import appliance_supports_climate, build_climate_entities, demote_controls_to_config
 from .const import (
@@ -655,6 +655,25 @@ class Appliance:
         if climate_entities and CLIMATE_KEPT_CONTROLS_AS_CONFIG:
             demote_controls_to_config(entities)
         entities.extend(climate_entities)
+
+        # Button to reconnect the cloud API without reloading the integration
+        entities.append(
+            ElectroluxReconnectButton(
+                coordinator=self.coordinator,
+                name="Reconnect API",
+                config_entry=self.coordinator.config_entry,
+                pnc_id=self.pnc_id,
+                entity_type=BUTTON,
+                entity_name="reconnect_api",
+                entity_attr="reconnectApi",
+                entity_source="",
+                capability={},
+                unit=None,
+                device_class=None,
+                entity_category=EntityCategory.CONFIG,
+                icon="mdi:cloud-refresh",
+            )
+        )
 
         # Setup each found entity
         self.entities = entities

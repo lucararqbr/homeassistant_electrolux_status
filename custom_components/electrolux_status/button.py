@@ -132,3 +132,21 @@ class ElectroluxButton(ElectroluxEntity, ButtonEntity):
         # await self.hass.async_add_executor_job(self.send_command)
         # if self.entity_attr == "ExecuteCommand":
         #     await self.hass.async_add_executor_job(self.coordinator.api.setHacl, self.get_appliance.pnc_id, "0x0403", self.val_to_send, self.entity_source)
+
+
+class ElectroluxReconnectButton(ElectroluxEntity, ButtonEntity):
+    """Button reconnecting the cloud API (websocket) without reloading the integration."""
+
+    @property
+    def entity_domain(self):
+        """Entity domain for the entry. Used for consistent entity_id."""
+        return BUTTON
+
+    @property
+    def available(self) -> bool:
+        """Always available: it is meant to be used when the API looks broken."""
+        return True
+
+    async def async_press(self) -> None:
+        """Check the API, apply the current state and reconnect the websocket."""
+        await self.coordinator.async_check_api(force_reconnect=True)

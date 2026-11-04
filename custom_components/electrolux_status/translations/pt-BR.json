@@ -83,6 +83,9 @@
             }
         },
         "button": {
+            "reconnect_api": {
+                "name": "Reconectar API"
+            },
             "alerts": {
                 "name": "Alertas"
             },

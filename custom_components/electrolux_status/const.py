@@ -116,6 +116,7 @@ TRANSLATED_ENTITY_NAMES: frozenset[str] = frozenset(
         "connectivity_state",
         "evaporator_defrost_state",
         "filter_state",
+        "reconnect_api",
         "sleep_mode",
         "sound_volume",
         "stop_time",
@@ -132,10 +133,10 @@ CLIMATE_REMOVE_REDUNDANT_ENTITIES = True
 # (dashboards, voice assistants) and the climate is the single control of the appliance.
 CLIMATE_KEPT_CONTROLS_AS_CONFIG = True
 
-# Entities with the "configuration" category are hidden by default when they are first added
-# to the entity registry, so they stay out of dashboards and do not trigger automations by
-# mistake. Entities already registered keep their current visibility.
-CONFIG_ENTITIES_HIDDEN_BY_DEFAULT = True
+# When True, entities with the "configuration" category are hidden by default when they are first
+# added to the entity registry. Disabled: configuration entities stay visible. Entities already
+# registered keep their current visibility either way.
+CONFIG_ENTITIES_HIDDEN_BY_DEFAULT = False
 
 # Climate: state attributes of air conditioners shown as on/off binary sensors instead of text
 # sensors. Off only when the API reports "OFF" (for applianceState, "IDLE" counts as on).
@@ -151,6 +152,15 @@ CLIMATE_BINARY_SENSORS: dict[str, tuple[BinarySensorDeviceClass | None, str]] = 
 CLIMATE_HIDDEN_MODES: dict[str, list[str]] = {
     "YI12F": ["HEAT"],
 }
+
+# API check: every API_CHECK_INTERVAL seconds the state of all appliances is fetched from the cloud
+# and compared with the state shown in Home Assistant. Differences are applied, and when the
+# websocket has also been silent for that long it is reconnected (no integration reload).
+API_CHECK_INTERVAL = 600  # 10 minutes
+
+# API check: reported values ignored in the comparison (countdowns the cloud may update without
+# pushing them). Nested values (dicts, lists) are always ignored.
+API_CHECK_IGNORED_KEYS: frozenset[str] = frozenset({"startTime", "stopTime", "timeToEnd"})
 
 # List of entity names that need to be updated to 0 manually when they are close to 0
 TIME_ENTITIES_TO_UPDATE = ["timeToEnd"]

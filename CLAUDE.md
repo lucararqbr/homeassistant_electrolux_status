@@ -27,6 +27,7 @@ Apesar do nome `_climate_` no zip, a versão original **não** tem plataforma
 | `ocultar entidades de Configuração por padrão` | Item 9 abaixo (01/11/2026) |
 | `docs: CLAUDE.md` | Este arquivo |
 | `estado do aparelho e secagem automática como binary sensor` | Item 10 abaixo (03/11/2026) |
+| `verificação da API e reconexão do websocket` | Item 11 abaixo; desliga o item 9 (04/11/2026) |
 
 Para ver tudo que mudou em relação ao original: `git diff v2.3.6 main` não
 funciona direto (a tag tem outra estrutura de pastas); use
@@ -185,17 +186,19 @@ inglês a partir do atributo da API.
 - `pt.json` recebeu a mesma seção `entity` em PT-BR (a parte `config` continua
   em português de Portugal, como no original).
 
-### 9. Entidades de "Configuração" ocultas por padrão
-**Arquivos:** `const.py` (`CONFIG_ENTITIES_HIDDEN_BY_DEFAULT = True`), `entity.py`
+### 9. Opção para ocultar entidades de "Configuração" (desligada)
+**Arquivos:** `const.py` (`CONFIG_ENTITIES_HIDDEN_BY_DEFAULT`), `entity.py`
 (`entity_registry_visible_default`)
 
-**Por quê:** regra do projeto — entidades auxiliares/redundantes ficam na
-categoria Configuração **e ocultas**, para não aparecer em dashboards nem
-disparar automações por engano. Antes deste ajuste elas iam para Configuração,
-mas continuavam visíveis.
+Criada em 01/11/2026 para ocultar por padrão as entidades da categoria
+Configuração. **Desligada em 04/11/2026** (`CONFIG_ENTITIES_HIDDEN_BY_DEFAULT =
+False`): decidido que as entidades de Configuração **não** precisam ficar
+ocultas. O mecanismo ficou no código; para religar, basta trocar para `True`.
+Nenhuma entidade chegou a ser ocultada no HA enquanto estava ligada
+(conferido no registro de entidades em 04/11/2026).
 
-- Vale para toda entidade com `EntityCategory.CONFIG`: as rebaixadas pelo
-  item 3 e as que já vêm do catálogo como CONFIG.
+- Quando ligada, vale para toda entidade com `EntityCategory.CONFIG`: as
+  rebaixadas pelo item 3 e as que já vêm do catálogo como CONFIG.
 - O Home Assistant só aplica isso quando a entidade é **registrada pela
   primeira vez**. Entidades que já existem mantêm a visibilidade atual; para
   aplicar nelas, ocultar manualmente ou remover e recriar a entidade/integração.
@@ -227,11 +230,47 @@ liga/desliga ficam mais simples para cartões e automações.
   `binary_sensor.*`). As antigas ficam como "não fornecidas" e podem ser
   excluídas; automações/cartões que usavam `sensor.*` precisam ser ajustados
   (estados agora `on`/`off`).
+- Valores declarados pela API (diagnóstico de 03/11/2026): `applianceState` =
+  `OFF, RUNNING, IDLE, PAUSED, READY_TO_START, DELAYED_START, END_OF_CYCLE,
+  ALARM` (lista genérica Electrolux); na prática os ar-condicionados só usam
+  `OFF`/`RUNNING` (10 dias de histórico). `cleanAirMode` = `ON/OFF` (quando
+  `ON`, a API aceita o comando `OFF` para interromper a secagem — não usado).
+
+### 11. Verificação da API e reconexão do websocket sem recarregar
+**Arquivos:** `coordinator.py` (`async_check_api`, `reconnect_websocket`,
+`_fetch_appliances_list`), `__init__.py`, `button.py`
+(`ElectroluxReconnectButton`), `api.py`, `const.py` (`API_CHECK_INTERVAL`,
+`API_CHECK_IGNORED_KEYS`, `TRANSLATED_ENTITY_NAMES`), traduções
+
+**Por quê:** de vez em quando os estados congelavam e era preciso recarregar a
+integração. A integração só recebe dados pelo websocket (não faz consulta
+periódica), e a renovação automática dele (a cada 12 h, criada para as issues
+#27/#35 do original "doesn't update states after a few hours") está
+**comentada no original** desde 2024. Se a Electrolux para de mandar eventos
+sem fechar a conexão, nada percebe.
+
+- **A cada 10 min** (`API_CHECK_INTERVAL = 600`): uma chamada
+  `get_appliances_list` traz o estado de todos os aparelhos e é comparada com o
+  do HA (só valores simples; ignora contadores `startTime`/`stopTime`/
+  `timeToEnd` e valores aninhados).
+  - Diferenças são aplicadas na hora.
+  - Se houve diferença **e** o websocket não mandou nada nesse intervalo, o
+    websocket é **reconectado** (entidades mantidas, sem recarregar). Fica no
+    log como aviso: `Electrolux websocket stopped sending updates ...
+    reconnecting`.
+  - HTTP 401/403: refaz o login e tenta de novo.
+- **Botão "Reconectar API"** (um por aparelho, categoria Configuração, sempre
+  disponível): faz a verificação e força a reconexão.
+- A reconexão cancela a tarefa do websocket anterior antes de abrir outra (sem
+  isso, dois loops de conexão da biblioteca podem rodar juntos).
+- ~144 chamadas/dia à API.
+- **Não testado com a falha real** — conferir no log do HA se aparece o aviso de
+  reconexão e se os estados deixam de congelar.
 
 ## Arquivos não alterados
 
-`__init__.py`, `button.py`, `catalog_purifier.py`,
-`catalog_refrigerator.py`, `config_flow.py`, `coordinator.py`,
+`catalog_purifier.py`,
+`catalog_refrigerator.py`, `config_flow.py`,
 `diagnostics.py`, `manifest.json` (continua 2.3.6), `select.py`, `sensor.py`,
 `switch.py`, `util.py`, `appliance_definitions/`, demais traduções.
 
@@ -252,8 +291,7 @@ liga/desliga ficam mais simples para cartões e automações.
    Adicionar integração → *Electrolux Status*.
 6. Após reiniciar, conferir no aparelho de ar-condicionado se a entidade
    `climate.*` apareceu e se as entidades redundantes antigas sumiram (as que
-   ficaram órfãs no registro podem ser removidas manualmente). Controles de
-   Configuração já registrados antes não são ocultados sozinhos (ver item 9).
+   ficaram órfãs no registro podem ser removidas manualmente).
 
 > Atenção: se a integração estiver instalada pelo HACS, uma atualização pelo
 > HACS sobrescreve estas modificações.
@@ -270,6 +308,6 @@ liga/desliga ficam mais simples para cartões e automações.
 ## Regras do projeto
 
 - Textos e traduções em PT-BR.
-- Entidades auxiliares/redundantes ficam na categoria Configuração e ocultas por
-  padrão, para não disparar automações.
+- Entidades auxiliares/redundantes ficam na categoria Configuração, mas
+  **visíveis** (decisão de 04/11/2026; não seguir a regra geral de ocultar).
 - Documentar sempre a versão original usada como base.

@@ -1,5 +1,6 @@
 """electrolux status integration."""
 
+from datetime import timedelta
 import logging
 
 from homeassistant.config_entries import ConfigEntry
@@ -15,9 +16,11 @@ from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.typing import ConfigType
 
 from .const import (
+    API_CHECK_INTERVAL,
     CONF_RENEW_INTERVAL,
     DEFAULT_COUNTRY_CODE,
     DEFAULT_LANGUAGE,
@@ -98,6 +101,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Call async_setup_entry in entity files
     _LOGGER.debug("async_setup_entry async_forward_entry_setups")
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
+    # Check the cloud API periodically and reconnect the websocket when it stopped sending updates
+    entry.async_on_unload(
+        async_track_time_interval(
+            hass,
+            coordinator.async_check_api,
+            timedelta(seconds=API_CHECK_INTERVAL),
+            name="Electrolux API check",
+        )
+    )
 
     # Fix for https://github.com/albaintor/homeassistant_electrolux_status/issues/160
     # Issue introduced in upgrade to 2.2.0, can probably be removed at some stage
