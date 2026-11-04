@@ -1,0 +1,5 @@
+# Ambiente de testes (mesmas versões do servidor). Ver CLAUDE.md, seção "Testes".
+homeassistant==2026.10.4
+pyelectroluxocp==0.1.3
+aiofiles>=25.1.0
+pytest

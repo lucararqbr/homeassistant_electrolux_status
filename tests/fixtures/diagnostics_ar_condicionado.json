@@ -1,0 +1,1025 @@
+{
+  "appliances_info": [
+    {
+      "pnc": "910280689",
+      "brand": "ELECTROLUX",
+      "market": "BRAZIL",
+      "productArea": "WELLBEING",
+      "deviceType": "COMBI_AIR_CONDITIONER",
+      "project": "EMMANUELLE",
+      "model": "YI12F",
+      "variant": "12KBTU",
+      "colour": "WHITE",
+      "status": 1,
+      "elc": "00",
+      "configurationName": null,
+      "productionReady": null
+    },
+    {
+      "pnc": "910280693",
+      "brand": "ELECTROLUX",
+      "market": "BRAZIL",
+      "productArea": "WELLBEING",
+      "deviceType": "COMBI_AIR_CONDITIONER",
+      "project": "EMMANUELLE",
+      "model": "YI22F",
+      "variant": "22KBTU",
+      "colour": "WHITE",
+      "status": 1,
+      "elc": "00",
+      "configurationName": null,
+      "productionReady": null
+    }
+  ],
+  "appliances_list": [
+    {
+      "applianceId": "910280693_00:00000002-000000000002",
+      "applianceData": {
+        "applianceName": "Ar SALA",
+        "created": "2025-01-24T19:26:28.872Z",
+        "modelName": "CA"
+      },
+      "properties": {
+        "desired": {},
+        "reported": {
+          "connectivityState": "connected",
+          "sleepMode": "OFF",
+          "applianceInfo": {
+            "applianceType": "CA",
+            "capabilityHash": "4729d30541a4e67e73014b49e8387a700a985783e9ab87e641ecf9f758578323",
+            "applianceTypeProjection": "CA#1793724773480#428616"
+          },
+          "displayLight": "DISPLAY_LIGHT_1",
+          "temperatureRepresentation": "CELSIUS",
+          "currentEnergyUsePercent": 100,
+          "targetTemperatureF": 77.0,
+          "targetTemperatureC": 25.0,
+          "applianceState": "OFF",
+          "applianceMainBoardSwVersion": "007687D34",
+          "soundVolume": 1,
+          "autoSenseMode": "OFF",
+          "networkInterface": {
+            "swVersion": "v3.0.0_argo",
+            "otaState": "IDLE",
+            "linkQualityIndicator": "VERY_GOOD",
+            "niuSwUpdateCurrentDescription": "A21023902A-S00007029A",
+            "swAncAndRevision": "S00007029A"
+          },
+          "stopTime": 0,
+          "cleanAirMode": "OFF",
+          "mode": "AUTO",
+          "alerts": [
+            {
+              "severity": "FAULT",
+              "acknowledgeStatus": "NOT_NEEDED",
+              "code": "COMMUNICATION_FAULT",
+              "applianceCode": "1000"
+            }
+          ],
+          "filterState": "GOOD",
+          "fanSpeedSetting": "TURBO",
+          "flapPosition": 0,
+          "comfortAir": "OFF",
+          "evaporatorDefrostState": "NOT_DEFROSTING",
+          "flapOscillate": "OFF",
+          "cpv": "00",
+          "ambientTemperatureF": 93.2,
+          "ambientTemperatureC": 34.0
+        },
+        "metadataDesired": {},
+        "metadata": {}
+      },
+      "status": "enabled",
+      "connectionState": "connected"
+    },
+    {
+      "applianceId": "910280689_00:00000001-000000000001",
+      "applianceData": {
+        "applianceName": "Ar HOME OFFICE",
+        "created": "2025-02-27T14:07:34.677Z",
+        "modelName": "CA"
+      },
+      "properties": {
+        "desired": {},
+        "reported": {
+          "applianceInfo": {
+            "capabilityHash": "4729d30541a4e67e73014b49e8387a700a985783e9ab87e641ecf9f758578323",
+            "applianceType": "CA",
+            "applianceTypeProjection": "CA#1793739635743#902846"
+          },
+          "connectivityState": "connected",
+          "sleepMode": "OFF",
+          "displayLight": "DISPLAY_LIGHT_1",
+          "temperatureRepresentation": "CELSIUS",
+          "currentEnergyUsePercent": 100,
+          "targetTemperatureF": 77.0,
+          "targetTemperatureC": 25.0,
+          "applianceState": "RUNNING",
+          "applianceMainBoardSwVersion": "007687D34",
+          "soundVolume": 1,
+          "autoSenseMode": "OFF",
+          "networkInterface": {
+            "swVersion": "v3.0.0_argo",
+            "otaState": "IDLE",
+            "linkQualityIndicator": "VERY_GOOD",
+            "niuSwUpdateCurrentDescription": "A21023902A-S00007029A",
+            "swAncAndRevision": "S00007029A"
+          },
+          "stopTime": 0,
+          "cleanAirMode": "OFF",
+          "mode": "AUTO",
+          "alerts": [
+            {
+              "severity": "FAULT",
+              "acknowledgeStatus": "NOT_NEEDED",
+              "code": "COMMUNICATION_FAULT",
+              "applianceCode": "1000"
+            }
+          ],
+          "filterState": "GOOD",
+          "fanSpeedSetting": "TURBO",
+          "flapPosition": 0,
+          "comfortAir": "OFF",
+          "evaporatorDefrostState": "NOT_DEFROSTING",
+          "flapOscillate": "ON",
+          "cpv": "00",
+          "ambientTemperatureF": 87.8,
+          "ambientTemperatureC": 31.0
+        },
+        "metadataDesired": {},
+        "metadata": {}
+      },
+      "status": "enabled",
+      "connectionState": "connected"
+    }
+  ],
+  "appliances_detail": {
+    "910280693_00:00000002-000000000002": {
+      "capabilities": {
+        "alerts": {
+          "access": "read",
+          "type": "alert",
+          "values": {
+            "COMMUNICATION_FAULT": {},
+            "EXTERNAL_TEMPERATURE_SENSORS": {},
+            "INTERNAL_FAN": {},
+            "INTERNAL_ROOM_TEMPERATURE_SENSOR": {},
+            "INTERNAL_TUBE_TEMPERATURE_SENSOR": {},
+            "INTERNEL_ZEROCROSSING_SENSOR": {},
+            "LOW_VOLTAGE_POWER_SOURCE": {}
+          }
+        },
+        "applianceMainBoardSwVersion": {
+          "access": "read",
+          "type": "string"
+        },
+        "applianceState": {
+          "access": "read",
+          "type": "string",
+          "values": {
+            "ALARM": {},
+            "DELAYED_START": {},
+            "END_OF_CYCLE": {},
+            "IDLE": {},
+            "OFF": {},
+            "PAUSED": {},
+            "READY_TO_START": {},
+            "RUNNING": {}
+          }
+        },
+        "autoSenseMode": {
+          "access": "readwrite",
+          "triggers": [
+            {
+              "action": {
+                "fanSpeedSetting": {
+                  "disabled": true
+                },
+                "flapPosition": {
+                  "disabled": true
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "ON",
+                "operator": "eq"
+              }
+            },
+            {
+              "action": {
+                "fanSpeedSetting": {
+                  "disabled": false
+                },
+                "flapPosition": {
+                  "disabled": false
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "ON",
+                "operator": "ne"
+              }
+            }
+          ],
+          "type": "string",
+          "values": {
+            "OFF": {},
+            "ON": {}
+          }
+        },
+        "batchSchedulerMode": {
+          "access": "readwrite",
+          "type": "boolean",
+          "values": {
+            "OFF": {},
+            "ON": {}
+          }
+        },
+        "cleanAirMode": {
+          "access": "read",
+          "triggers": [
+            {
+              "action": {
+                "$self": {
+                  "access": "readwrite",
+                  "values": {
+                    "OFF": {}
+                  }
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "ON",
+                "operator": "eq"
+              }
+            },
+            {
+              "action": {
+                "$self": {
+                  "access": "read"
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "OFF",
+                "operator": "eq"
+              }
+            }
+          ],
+          "type": "string",
+          "values": {
+            "OFF": {},
+            "ON": {}
+          }
+        },
+        "cleanFilterAlertReset": {
+          "access": "write",
+          "type": "string"
+        },
+        "comfortAir": {
+          "access": "readwrite",
+          "triggers": [
+            {
+              "action": {
+                "fanSpeedSetting": {
+                  "disabled": true
+                },
+                "flapPosition": {
+                  "disabled": true
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "ON",
+                "operator": "eq"
+              }
+            },
+            {
+              "action": {
+                "fanSpeedSetting": {
+                  "disabled": false
+                },
+                "flapPosition": {
+                  "disabled": false
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "ON",
+                "operator": "ne"
+              }
+            }
+          ],
+          "type": "string",
+          "values": {
+            "OFF": {},
+            "ON": {}
+          }
+        },
+        "currentEnergyUsePercent": {
+          "access": "read",
+          "max": 100,
+          "min": 0,
+          "step": 1,
+          "type": "number"
+        },
+        "displayLight": {
+          "access": "readwrite",
+          "max": 100,
+          "min": 0,
+          "step": 1,
+          "type": "string"
+        },
+        "evaporatorDefrostState": {
+          "access": "read",
+          "type": "string",
+          "values": {
+            "DEFROSTING": {},
+            "NOT_DEFROSTING": {}
+          }
+        },
+        "executeCommand": {
+          "access": "write",
+          "schedulable": true,
+          "type": "string",
+          "values": {
+            "OFF": {},
+            "ON": {}
+          }
+        },
+        "fanSpeedSetting": {
+          "access": "readwrite",
+          "schedulable": true,
+          "type": "string",
+          "values": {
+            "HIGH": {},
+            "LOW": {},
+            "MIDDLE": {},
+            "TURBO": {}
+          }
+        },
+        "filterState": {
+          "access": "read",
+          "type": "string",
+          "values": {
+            "BUY": {},
+            "CHANGE": {},
+            "CLEAN": {},
+            "GOOD": {}
+          }
+        },
+        "flapOscillate": {
+          "access": "readwrite",
+          "type": "string",
+          "values": {
+            "OFF": {},
+            "ON": {}
+          }
+        },
+        "flapPosition": {
+          "access": "readwrite",
+          "type": "number",
+          "values": {
+            "POSITION_0": {},
+            "POSITION_1": {},
+            "POSITION_2": {},
+            "POSITION_3": {},
+            "POSITION_4": {},
+            "POSITION_5": {},
+            "POSITION_6": {}
+          }
+        },
+        "mode": {
+          "access": "readwrite",
+          "schedulable": true,
+          "triggers": [
+            {
+              "action": {
+                "targetTemperatureC": {
+                  "disabled": true,
+                  "type": "temperature"
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "FANONLY",
+                "operator": "eq"
+              }
+            },
+            {
+              "action": {
+                "targetTemperatureC": {
+                  "disabled": false,
+                  "type": "temperature"
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "FANONLY",
+                "operator": "ne"
+              }
+            }
+          ],
+          "type": "string",
+          "values": {
+            "AUTO": {},
+            "COOL": {},
+            "FANONLY": {}
+          }
+        },
+        "networkInterface": {
+          "linkQualityIndicator": {
+            "access": "read",
+            "type": "string",
+            "values": {
+              "EXCELLENT": {},
+              "GOOD": {},
+              "POOR": {},
+              "UNDEFINED": {},
+              "VERY_GOOD": {},
+              "VERY_POOR": {}
+            }
+          },
+          "otaState": {
+            "access": "read",
+            "type": "string",
+            "values": {
+              "DESCRIPTION_AVAILABLE": {},
+              "DESCRIPTION_DOWNLOADING": {},
+              "DESCRIPTION_READY": {},
+              "FW_DOWNLOADING": {},
+              "FW_DOWNLOAD_START": {},
+              "FW_SIGNATURE_CHECK": {},
+              "FW_UPDATE_IN_PROGRESS": {},
+              "IDLE": {},
+              "READY_TO_UPDATE": {},
+              "UPDATE_ABORT": {},
+              "UPDATE_CHECK": {},
+              "UPDATE_ERROR": {},
+              "UPDATE_OK": {},
+              "WAITINGFORAUTHORIZATION": {}
+            }
+          },
+          "swVersion": {
+            "access": "read",
+            "type": "string"
+          }
+        },
+        "sleepMode": {
+          "access": "readwrite",
+          "triggers": [
+            {
+              "action": {
+                "targetTemperatureC": {
+                  "disabled": true,
+                  "type": "temperature"
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "ON",
+                "operator": "eq"
+              }
+            },
+            {
+              "action": {
+                "targetTemperatureC": {
+                  "disabled": false,
+                  "type": "temperature"
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "ON",
+                "operator": "ne"
+              }
+            }
+          ],
+          "type": "string",
+          "values": {
+            "OFF": {},
+            "ON": {}
+          }
+        },
+        "soundVolume": {
+          "access": "readwrite",
+          "type": "number",
+          "values": {
+            "0": {},
+            "1": {}
+          }
+        },
+        "stopTime": {
+          "access": "readwrite",
+          "max": 86400,
+          "min": 0,
+          "step": 3600,
+          "type": "number"
+        },
+        "targetTemperatureC": {
+          "access": "readwrite",
+          "default": 23.0,
+          "max": 30.0,
+          "min": 16.0,
+          "schedulable": true,
+          "step": 1.0,
+          "type": "temperature"
+        }
+      },
+      "state": {
+        "applianceId": "910280693_00:00000002-000000000002",
+        "applianceData": {
+          "applianceName": "Ar SALA",
+          "created": "2025-01-24T19:26:28.872Z",
+          "modelName": "CA"
+        },
+        "properties": {
+          "desired": {},
+          "reported": {
+            "sleepMode": "OFF",
+            "cleanAirMode": "OFF",
+            "applianceInfo": {
+              "applianceType": "CA",
+              "capabilityHash": "4729d30541a4e67e73014b49e8387a700a985783e9ab87e641ecf9f758578323",
+              "applianceTypeProjection": "CA#1793724773480#428616"
+            },
+            "displayLight": "DISPLAY_LIGHT_1",
+            "temperatureRepresentation": "CELSIUS",
+            "currentEnergyUsePercent": 100,
+            "cpv": "00",
+            "targetTemperatureF": 77.0,
+            "targetTemperatureC": 25.0,
+            "flapPosition": 0,
+            "comfortAir": "OFF",
+            "applianceState": "OFF",
+            "evaporatorDefrostState": "NOT_DEFROSTING",
+            "applianceMainBoardSwVersion": "007687D34",
+            "mode": "AUTO",
+            "alerts": [
+              {
+                "severity": "FAULT",
+                "acknowledgeStatus": "NOT_NEEDED",
+                "code": "COMMUNICATION_FAULT",
+                "applianceCode": "1000"
+              }
+            ],
+            "soundVolume": 1,
+            "filterState": "GOOD",
+            "fanSpeedSetting": "TURBO",
+            "autoSenseMode": "OFF",
+            "networkInterface": {
+              "swVersion": "v3.0.0_argo",
+              "otaState": "IDLE",
+              "linkQualityIndicator": "VERY_GOOD",
+              "niuSwUpdateCurrentDescription": "A21023902A-S00007029A",
+              "swAncAndRevision": "S00007029A"
+            },
+            "stopTime": 0,
+            "flapOscillate": "OFF",
+            "connectivityState": "connected",
+            "ambientTemperatureF": 93.2,
+            "ambientTemperatureC": 34.0
+          },
+          "metadataDesired": {},
+          "metadata": {}
+        },
+        "status": "enabled",
+        "connectionState": "connected"
+      }
+    },
+    "910280689_00:00000001-000000000001": {
+      "capabilities": {
+        "alerts": {
+          "access": "read",
+          "type": "alert",
+          "values": {
+            "COMMUNICATION_FAULT": {},
+            "EXTERNAL_TEMPERATURE_SENSORS": {},
+            "INTERNAL_FAN": {},
+            "INTERNAL_ROOM_TEMPERATURE_SENSOR": {},
+            "INTERNAL_TUBE_TEMPERATURE_SENSOR": {},
+            "INTERNEL_ZEROCROSSING_SENSOR": {},
+            "LOW_VOLTAGE_POWER_SOURCE": {}
+          }
+        },
+        "applianceMainBoardSwVersion": {
+          "access": "read",
+          "type": "string"
+        },
+        "applianceState": {
+          "access": "read",
+          "type": "string",
+          "values": {
+            "ALARM": {},
+            "DELAYED_START": {},
+            "END_OF_CYCLE": {},
+            "IDLE": {},
+            "OFF": {},
+            "PAUSED": {},
+            "READY_TO_START": {},
+            "RUNNING": {}
+          }
+        },
+        "autoSenseMode": {
+          "access": "readwrite",
+          "triggers": [
+            {
+              "action": {
+                "fanSpeedSetting": {
+                  "disabled": true
+                },
+                "flapPosition": {
+                  "disabled": true
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "ON",
+                "operator": "eq"
+              }
+            },
+            {
+              "action": {
+                "fanSpeedSetting": {
+                  "disabled": false
+                },
+                "flapPosition": {
+                  "disabled": false
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "ON",
+                "operator": "ne"
+              }
+            }
+          ],
+          "type": "string",
+          "values": {
+            "OFF": {},
+            "ON": {}
+          }
+        },
+        "batchSchedulerMode": {
+          "access": "readwrite",
+          "type": "boolean",
+          "values": {
+            "OFF": {},
+            "ON": {}
+          }
+        },
+        "cleanAirMode": {
+          "access": "read",
+          "triggers": [
+            {
+              "action": {
+                "$self": {
+                  "access": "readwrite",
+                  "values": {
+                    "OFF": {}
+                  }
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "ON",
+                "operator": "eq"
+              }
+            },
+            {
+              "action": {
+                "$self": {
+                  "access": "read"
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "OFF",
+                "operator": "eq"
+              }
+            }
+          ],
+          "type": "string",
+          "values": {
+            "OFF": {},
+            "ON": {}
+          }
+        },
+        "cleanFilterAlertReset": {
+          "access": "write",
+          "type": "string"
+        },
+        "comfortAir": {
+          "access": "readwrite",
+          "triggers": [
+            {
+              "action": {
+                "fanSpeedSetting": {
+                  "disabled": true
+                },
+                "flapPosition": {
+                  "disabled": true
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "ON",
+                "operator": "eq"
+              }
+            },
+            {
+              "action": {
+                "fanSpeedSetting": {
+                  "disabled": false
+                },
+                "flapPosition": {
+                  "disabled": false
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "ON",
+                "operator": "ne"
+              }
+            }
+          ],
+          "type": "string",
+          "values": {
+            "OFF": {},
+            "ON": {}
+          }
+        },
+        "currentEnergyUsePercent": {
+          "access": "read",
+          "max": 100,
+          "min": 0,
+          "step": 1,
+          "type": "number"
+        },
+        "displayLight": {
+          "access": "readwrite",
+          "max": 100,
+          "min": 0,
+          "step": 1,
+          "type": "string"
+        },
+        "evaporatorDefrostState": {
+          "access": "read",
+          "type": "string",
+          "values": {
+            "DEFROSTING": {},
+            "NOT_DEFROSTING": {}
+          }
+        },
+        "executeCommand": {
+          "access": "write",
+          "schedulable": true,
+          "type": "string",
+          "values": {
+            "OFF": {},
+            "ON": {}
+          }
+        },
+        "fanSpeedSetting": {
+          "access": "readwrite",
+          "schedulable": true,
+          "type": "string",
+          "values": {
+            "HIGH": {},
+            "LOW": {},
+            "MIDDLE": {},
+            "TURBO": {}
+          }
+        },
+        "filterState": {
+          "access": "read",
+          "type": "string",
+          "values": {
+            "BUY": {},
+            "CHANGE": {},
+            "CLEAN": {},
+            "GOOD": {}
+          }
+        },
+        "flapOscillate": {
+          "access": "readwrite",
+          "type": "string",
+          "values": {
+            "OFF": {},
+            "ON": {}
+          }
+        },
+        "flapPosition": {
+          "access": "readwrite",
+          "type": "number",
+          "values": {
+            "POSITION_0": {},
+            "POSITION_1": {},
+            "POSITION_2": {},
+            "POSITION_3": {},
+            "POSITION_4": {},
+            "POSITION_5": {},
+            "POSITION_6": {}
+          }
+        },
+        "mode": {
+          "access": "readwrite",
+          "schedulable": true,
+          "triggers": [
+            {
+              "action": {
+                "targetTemperatureC": {
+                  "disabled": true,
+                  "type": "temperature"
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "FANONLY",
+                "operator": "eq"
+              }
+            },
+            {
+              "action": {
+                "targetTemperatureC": {
+                  "disabled": false,
+                  "type": "temperature"
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "FANONLY",
+                "operator": "ne"
+              }
+            }
+          ],
+          "type": "string",
+          "values": {
+            "AUTO": {},
+            "COOL": {},
+            "FANONLY": {}
+          }
+        },
+        "networkInterface": {
+          "linkQualityIndicator": {
+            "access": "read",
+            "type": "string",
+            "values": {
+              "EXCELLENT": {},
+              "GOOD": {},
+              "POOR": {},
+              "UNDEFINED": {},
+              "VERY_GOOD": {},
+              "VERY_POOR": {}
+            }
+          },
+          "otaState": {
+            "access": "read",
+            "type": "string",
+            "values": {
+              "DESCRIPTION_AVAILABLE": {},
+              "DESCRIPTION_DOWNLOADING": {},
+              "DESCRIPTION_READY": {},
+              "FW_DOWNLOADING": {},
+              "FW_DOWNLOAD_START": {},
+              "FW_SIGNATURE_CHECK": {},
+              "FW_UPDATE_IN_PROGRESS": {},
+              "IDLE": {},
+              "READY_TO_UPDATE": {},
+              "UPDATE_ABORT": {},
+              "UPDATE_CHECK": {},
+              "UPDATE_ERROR": {},
+              "UPDATE_OK": {},
+              "WAITINGFORAUTHORIZATION": {}
+            }
+          },
+          "swVersion": {
+            "access": "read",
+            "type": "string"
+          }
+        },
+        "sleepMode": {
+          "access": "readwrite",
+          "triggers": [
+            {
+              "action": {
+                "targetTemperatureC": {
+                  "disabled": true,
+                  "type": "temperature"
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "ON",
+                "operator": "eq"
+              }
+            },
+            {
+              "action": {
+                "targetTemperatureC": {
+                  "disabled": false,
+                  "type": "temperature"
+                }
+              },
+              "condition": {
+                "operand_1": "value",
+                "operand_2": "ON",
+                "operator": "ne"
+              }
+            }
+          ],
+          "type": "string",
+          "values": {
+            "OFF": {},
+            "ON": {}
+          }
+        },
+        "soundVolume": {
+          "access": "readwrite",
+          "type": "number",
+          "values": {
+            "0": {},
+            "1": {}
+          }
+        },
+        "stopTime": {
+          "access": "readwrite",
+          "max": 86400,
+          "min": 0,
+          "step": 3600,
+          "type": "number"
+        },
+        "targetTemperatureC": {
+          "access": "readwrite",
+          "default": 23.0,
+          "max": 30.0,
+          "min": 16.0,
+          "schedulable": true,
+          "step": 1.0,
+          "type": "temperature"
+        }
+      },
+      "state": {
+        "applianceId": "910280689_00:00000001-000000000001",
+        "applianceData": {
+          "applianceName": "Ar HOME OFFICE",
+          "created": "2025-02-27T14:07:34.677Z",
+          "modelName": "CA"
+        },
+        "properties": {
+          "desired": {},
+          "reported": {
+            "sleepMode": "OFF",
+            "cleanAirMode": "OFF",
+            "applianceInfo": {
+              "capabilityHash": "4729d30541a4e67e73014b49e8387a700a985783e9ab87e641ecf9f758578323",
+              "applianceType": "CA",
+              "applianceTypeProjection": "CA#1793739635743#902846"
+            },
+            "displayLight": "DISPLAY_LIGHT_1",
+            "temperatureRepresentation": "CELSIUS",
+            "currentEnergyUsePercent": 100,
+            "cpv": "00",
+            "targetTemperatureF": 77.0,
+            "targetTemperatureC": 25.0,
+            "flapPosition": 0,
+            "comfortAir": "OFF",
+            "applianceState": "RUNNING",
+            "evaporatorDefrostState": "NOT_DEFROSTING",
+            "applianceMainBoardSwVersion": "007687D34",
+            "mode": "AUTO",
+            "alerts": [
+              {
+                "severity": "FAULT",
+                "acknowledgeStatus": "NOT_NEEDED",
+                "code": "COMMUNICATION_FAULT",
+                "applianceCode": "1000"
+              }
+            ],
+            "soundVolume": 1,
+            "filterState": "GOOD",
+            "fanSpeedSetting": "TURBO",
+            "autoSenseMode": "OFF",
+            "networkInterface": {
+              "swVersion": "v3.0.0_argo",
+              "otaState": "IDLE",
+              "linkQualityIndicator": "VERY_GOOD",
+              "niuSwUpdateCurrentDescription": "A21023902A-S00007029A",
+              "swAncAndRevision": "S00007029A"
+            },
+            "stopTime": 0,
+            "flapOscillate": "ON",
+            "connectivityState": "connected",
+            "ambientTemperatureF": 87.8,
+            "ambientTemperatureC": 31.0
+          },
+          "metadataDesired": {},
+          "metadata": {}
+        },
+        "status": "enabled",
+        "connectionState": "connected"
+      }
+    }
+  },
+  "_comment": "Extraído do diagnóstico do HA de 03/11/2026 (Ar SALA YI22F e Ar HOME OFFICE YI12F). Só appliances_*; números de série trocados por valores fictícios."
+}

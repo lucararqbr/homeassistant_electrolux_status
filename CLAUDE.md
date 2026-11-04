@@ -28,6 +28,7 @@ Apesar do nome `_climate_` no zip, a versão original **não** tem plataforma
 | `docs: CLAUDE.md` | Este arquivo |
 | `estado do aparelho e secagem automática como binary sensor` | Item 10 abaixo (03/11/2026) |
 | `verificação da API e reconexão do websocket` | Item 11 abaixo; desliga o item 9 (04/11/2026) |
+| `testes automatizados` | Pasta `tests/` — ver seção "Testes" (04/11/2026) |
 
 Para ver tudo que mudou em relação ao original: `git diff v2.3.6 main` não
 funciona direto (a tag tem outra estrutura de pastas); use
@@ -280,10 +281,14 @@ sem fechar a conexão, nada percebe.
 2. Copiar os arquivos da integração para
    `/config/custom_components/electrolux_status/`
    (o nome da pasta precisa ser `electrolux_status`, igual ao `domain`).
-   **Não** copiar `.git/`, `.gitignore`, `.gitattributes`, `CLAUDE.md` nem os
-   `*.zip`.
-   - Exemplo via SSH, a partir desta pasta:
-     `git archive HEAD | ssh root@<ip-do-ha> "mkdir -p /config/custom_components/electrolux_status && tar -x -C /config/custom_components/electrolux_status --exclude=CLAUDE.md --exclude=.gitignore --exclude=.gitattributes"`
+   **Não** copiar `.git/`, `tests/`, `.gitignore`, `.gitattributes`,
+   `CLAUDE.md` nem os `*.zip`.
+   - **Via Samba** (usado aqui: `Z:\custom_components` = `/config/custom_components`),
+     no PowerShell a partir desta pasta; depois apagar
+     `Z:\custom_components\electrolux_status\__pycache__`:
+     `robocopy . "Z:\custom_components\electrolux_status" /E /XD .git tests .pytest_cache /XF CLAUDE.md .gitignore .gitattributes`
+   - Via SSH, a partir desta pasta:
+     `git archive HEAD | ssh root@<ip-do-ha> "mkdir -p /config/custom_components/electrolux_status && tar -x -C /config/custom_components/electrolux_status --exclude=CLAUDE.md --exclude=.gitignore --exclude=.gitattributes --exclude=tests"`
 3. Se já existia uma versão instalada (p.ex. via HACS), substituir os arquivos;
    apagar o `__pycache__` antigo da pasta se houver.
 4. **Reiniciar o Home Assistant** (Configurações → Sistema → Reiniciar).
@@ -295,6 +300,41 @@ sem fechar a conexão, nada percebe.
 
 > Atenção: se a integração estiver instalada pelo HACS, uma atualização pelo
 > HACS sobrescreve estas modificações.
+
+## Testes
+
+Pasta `tests/` (não vai para o HA). Testam as modificações com o Home Assistant
+real, sem precisar do servidor nem da nuvem Electrolux:
+
+- `tests/test_electrolux.py`: criação das entidades a partir dos dados reais
+  dos dois ar-condicionados (climate, binary sensors, botão Reconectar API, IDs
+  únicos), regra liga/desliga, traduções e a verificação da API / reconexão do
+  websocket com a nuvem simulada (item 11).
+- `tests/fixtures/diagnostics_ar_condicionado.json`: parte `appliances_*` do
+  diagnóstico do HA de 03/11/2026 (Ar SALA YI22F, Ar HOME OFFICE YI12F), sem
+  dados da conta e com números de série fictícios — o fork é público. Ao
+  atualizar com um diagnóstico novo, manter essa limpeza.
+- `tests/requirements.txt`: mesmas versões do servidor (HA 2026.10.4,
+  `pyelectroluxocp` 0.1.3).
+
+Python 3.14 instalado no Windows (04/11/2026, via `winget install
+Python.Python.3.14 --scope user`). Ambiente fora do OneDrive (o HA tem
+centenas de MB), criar uma vez:
+
+```bash
+py -3.14 -m venv "$LOCALAPPDATA/electrolux_status_venv"
+"$LOCALAPPDATA/electrolux_status_venv/Scripts/python.exe" -m pip install -r tests/requirements.txt
+```
+
+Rodar, a partir desta pasta (o `-P` é obrigatório: o `select.py` da integração
+esconderia o módulo `select` do Python):
+
+```bash
+"$LOCALAPPDATA/electrolux_status_venv/Scripts/python.exe" -P -m pytest -p no:cacheprovider tests
+```
+
+Rodar os testes antes de cada cópia para o HA. Eles **não** cobrem o
+comportamento contra a nuvem real (p.ex. se o websocket volta a mandar dados).
 
 ## Atualizando para uma nova versão do original
 
