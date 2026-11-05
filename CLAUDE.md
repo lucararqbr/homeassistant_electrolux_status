@@ -29,6 +29,7 @@ Apesar do nome `_climate_` no zip, a versão original **não** tem plataforma
 | `estado do aparelho e secagem automática como binary sensor` | Item 10 abaixo (03/11/2026) |
 | `verificação da API e reconexão do websocket` | Item 11 abaixo; desliga o item 9 (04/11/2026) |
 | `testes automatizados` | Pasta `tests/` — ver seção "Testes" (04/11/2026) |
+| `renovação do token em fuso negativo (401)` | Item 12 abaixo (04/11/2026) |
 
 Para ver tudo que mudou em relação ao original: `git diff v2.3.6 main` não
 funciona direto (a tag tem outra estrutura de pastas); use
@@ -267,6 +268,39 @@ sem fechar a conexão, nada percebe.
 - ~144 chamadas/dia à API.
 - **Não testado com a falha real** — conferir no log do HA se aparece o aviso de
   reconexão e se os estados deixam de congelar.
+
+### 12. Renovação do token corrigida para fusos negativos (erro 401)
+**Arquivos:** `coordinator.py` (`async_refresh_token`,
+`_execute_command_with_relogin`, `token_renewal_task`, `_fetch_appliances_list`,
+`async_check_api`)
+
+**Sintoma:** de vez em quando os comandos falhavam com
+`401, message='Unauthorized', url='.../appliances/<id>/command'` e só voltavam
+recarregando a integração; o botão "Reconectar API" (item 11) não resolvia.
+
+**Causa (bug do original):** para renovar o token 5 min antes de vencer, o
+`token_renewal_task` marcava o token como "vencido há 10 min" usando horário
+**UTC sem fuso**, mas a biblioteca `pyelectroluxocp` compara com
+`datetime.now()` (**horário local** sem fuso). Em UTC−3 (America/Fortaleza),
+"UTC − 10 min" fica 2h50 **no futuro** → a biblioteca não renovava, o token
+vencia e todos os comandos davam 401 por ~3 h, até a biblioteca renovar
+sozinha. Na Europa (UTC+) o bug não aparece. Confirmado em 04/11/2026: token
+salvo em `.storage/electrolux_status` emitido às 08:13, vencido às 20:13 e não
+renovado.
+
+- `async_refresh_token()`: marca o vencimento em horário local
+  (`datetime.now()`) e refaz o login; se o refresh token for recusado, faz
+  login completo com usuário e senha. Usado pela renovação automática, pela
+  verificação da API (401/403) e pelo botão "Reconectar API" (que agora também
+  renova o token).
+- Comandos (climate, botões, switches, selects, numbers): em 401 o token é
+  renovado e o comando é **repetido uma vez**. Feito envolvendo
+  `client.execute_appliance_command` no construtor do coordinator, então vale
+  para todas as entidades. Fica no log como aviso:
+  `Electrolux command rejected (HTTP 401), renewing the token and retrying`.
+- O teste `test_refresh_token_marks_token_expired_for_the_library` reproduz o
+  bug (falha com o código antigo) quando roda num computador em fuso negativo,
+  como este.
 
 ## Arquivos não alterados
 

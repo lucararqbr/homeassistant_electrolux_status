@@ -359,3 +359,121 @@ def test_concurrent_checks_do_not_overlap():
 
     api = asyncio.run(scenario())
     assert api.get_appliances_list.await_count == 1
+
+
+# ---------------------------------------------------------------- token renewal
+
+
+def library_token(expires_in_seconds):
+    """A real pyelectroluxocp UserToken, as the library creates it after a login/refresh."""
+    from pyelectroluxocp.oneAppApiClient import UserToken
+
+    return UserToken(
+        {
+            "accessToken": "a",
+            "refreshToken": "r",
+            "expiresIn": expires_in_seconds,
+            "tokenType": "Bearer",
+            "scope": "",
+        }
+    )
+
+
+def test_refresh_token_marks_token_expired_for_the_library():
+    """Regression: the forced expiry must make the library renew the token in any time zone.
+
+    The original code used naive UTC; in UTC-3 (Brazil) that is 3 hours in the future for the
+    library, which compares with naive local time, so the token was never renewed (HTTP 401).
+    """
+    api = fake_api()
+    coordinator, _ = make_coordinator(api)
+    api._user_token = library_token(4 * 60)  # about to expire: token_renewal_task runs now
+    assert api._user_token.should_renew() is False
+    coordinator.async_login = AsyncMock(return_value=True)
+    run(coordinator.async_refresh_token())
+    assert api._user_token.should_renew() is True
+    coordinator.async_login.assert_awaited_once()
+
+
+def test_refresh_token_falls_back_to_full_login():
+    from homeassistant.exceptions import ConfigEntryError
+
+    api = fake_api()
+    coordinator, _ = make_coordinator(api)
+    api._user_token = library_token(3600)
+    calls = []
+
+    async def login():
+        calls.append(api._user_token)
+        if len(calls) == 1:
+            raise ConfigEntryError("refresh token rejected")
+        return True
+
+    coordinator.async_login = login
+    run(coordinator.async_refresh_token())
+    assert len(calls) == 2
+    assert calls[1] is None  # second attempt: full login with the credentials
+
+
+def http_error(status):
+    return ClientResponseError(request_info=SimpleNamespace(real_url="x"), history=(), status=status)
+
+
+def test_command_retried_after_401():
+    api = fake_api()
+    coordinator, _ = make_coordinator(api)
+    coordinator._execute_command = AsyncMock(side_effect=[http_error(401), {"ok": True}])
+    coordinator.async_refresh_token = AsyncMock()
+    result = run(coordinator._execute_command_with_relogin("id", {"executeCommand": "ON"}))
+    assert result == {"ok": True}
+    coordinator.async_refresh_token.assert_awaited_once()
+    assert coordinator._execute_command.await_count == 2
+
+
+def test_command_other_errors_not_retried():
+    api = fake_api()
+    coordinator, _ = make_coordinator(api)
+    coordinator._execute_command = AsyncMock(side_effect=http_error(500))
+    coordinator.async_refresh_token = AsyncMock()
+    with pytest.raises(ClientResponseError):
+        run(coordinator._execute_command_with_relogin("id", {"executeCommand": "ON"}))
+    coordinator.async_refresh_token.assert_not_awaited()
+
+
+def test_coordinator_wraps_library_command():
+    """The real constructor routes every entity command through the 401 retry."""
+    from unittest.mock import patch
+
+    from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+
+    async def scenario():
+        client = SimpleNamespace(execute_appliance_command=AsyncMock(return_value="sent"))
+        original = client.execute_appliance_command
+        # Only the Home Assistant parts that need a running instance are replaced
+        with (
+            patch("electrolux_status.coordinator.Store"),
+            patch.object(DataUpdateCoordinator, "__init__", return_value=None),
+        ):
+            coordinator = ElectroluxCoordinator(SimpleNamespace(), client=client, renew_interval=60, username="user")
+        assert client.execute_appliance_command == coordinator._execute_command_with_relogin
+        assert await client.execute_appliance_command("id", {"a": 1}) == "sent"
+        original.assert_awaited_once_with("id", {"a": 1})
+
+    asyncio.run(scenario())
+
+
+def test_button_renews_token():
+    async def scenario():
+        api = fake_api()
+        coordinator, appliances = make_coordinator(api)
+        api.get_appliances_list.return_value = cloud_list(appliances)
+        coordinator.async_refresh_token = AsyncMock()
+        appliance = next(iter(appliances.appliances.values()))
+        button = next(e for e in appliance.entities if isinstance(e, ElectroluxReconnectButton))
+        button.coordinator = coordinator
+        await button.async_press()
+        return coordinator, api
+
+    coordinator, api = asyncio.run(scenario())
+    coordinator.async_refresh_token.assert_awaited_once()
+    api.connect_websocket.assert_called_once()

@@ -2,7 +2,7 @@
 
 import asyncio
 import base64
-from datetime import UTC, timedelta
+from datetime import UTC, datetime, timedelta
 import json
 import logging
 import time
@@ -50,6 +50,10 @@ class ElectroluxCoordinator(DataUpdateCoordinator):
     ) -> None:
         """Initialize."""
         self.api = client
+        # Every entity sends its commands through client.execute_appliance_command: renew the
+        # token and retry once when the API answers 401 (see _execute_command_with_relogin)
+        self._execute_command = client.execute_appliance_command
+        client.execute_appliance_command = self._execute_command_with_relogin
         self.platforms = []
         self.renew_task = None
         self.token_task = None
@@ -300,13 +304,8 @@ class ElectroluxCoordinator(DataUpdateCoordinator):
         except ClientResponseError as ex:
             if ex.status not in (401, 403):
                 raise
-            _LOGGER.warning("Electrolux API rejected the session (HTTP %s), logging in again", ex.status)
-            if self.api._user_token is not None:  # noqa: SLF001
-                # Force the library to renew the token (same trick as token_renewal_task)
-                self.api._user_token.expiresAt = (dt_util.utcnow() - timedelta(minutes=10)).replace(  # noqa: SLF001
-                    tzinfo=None
-                )
-            await self.async_login()
+            _LOGGER.warning("Electrolux API rejected the session (HTTP %s), renewing the token", ex.status)
+            await self.async_refresh_token()
             return await self.api.get_appliances_list()
 
     async def async_check_api(self, _now: Any = None, force_reconnect: bool = False) -> None:
@@ -323,6 +322,9 @@ class ElectroluxCoordinator(DataUpdateCoordinator):
             if appliances is None:
                 return
             try:
+                if force_reconnect:
+                    # Manual reconnection (button): start from a fresh token as well
+                    await self.async_refresh_token()
                 appliances_list = await self._fetch_appliances_list()
             except Exception as ex:  # noqa: BLE001
                 _LOGGER.warning("Electrolux API check failed: %s", ex)
@@ -407,11 +409,35 @@ class ElectroluxCoordinator(DataUpdateCoordinator):
         # wait until the token is about to expire
         await asyncio.sleep(self._token_expiry)
 
-        # manipulate the token expiry time to force an early token refresh
         _LOGGER.debug("Executing Electrolux token_renewal_task")
-        fake_expiry = (dt_util.utcnow() - timedelta(minutes=10)).replace(tzinfo=None)
-        self.api._user_token.expiresAt = fake_expiry  # noqa: SLF001
-        await self.async_login()
+        await self.async_refresh_token()
+
+    async def async_refresh_token(self) -> None:
+        """Renew the user token now (with the refresh token, or a new login if it is rejected)."""
+        if self.api._user_token is not None:  # noqa: SLF001
+            # Mark the token as expired so the library renews it. The library compares expiresAt
+            # with datetime.now() (naive LOCAL time): the original code used naive UTC, which is
+            # in the future in negative UTC offsets (e.g. Brazil, UTC-3), so the token was not
+            # renewed and every call answered 401 for hours after it expired.
+            self.api._user_token.expiresAt = datetime.now() - timedelta(minutes=10)  # noqa: SLF001
+        try:
+            await self.async_login()
+        except ConfigEntryError:
+            # Refresh token rejected: log in again with the account credentials
+            _LOGGER.warning("Electrolux refresh token rejected, logging in with the credentials")
+            self.api._user_token = None  # noqa: SLF001
+            await self.async_login()
+
+    async def _execute_command_with_relogin(self, appliance_id: str, command: dict[str, Any]) -> Any:
+        """Send a command; on HTTP 401 renew the token and send it once more."""
+        try:
+            return await self._execute_command(appliance_id, command)
+        except ClientResponseError as ex:
+            if ex.status != 401:
+                raise
+            _LOGGER.warning("Electrolux command rejected (HTTP 401), renewing the token and retrying")
+            await self.async_refresh_token()
+            return await self._execute_command(appliance_id, command)
 
     async def close_websocket(self):
         """Close websocket."""
